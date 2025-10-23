@@ -53,3 +53,27 @@
     }
   }
 }
+
+/* Leaflet Map Customization */
+.leaflet-container {
+  font-family: 'Inter', sans-serif;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.leaflet-popup-content {
+  margin: 8px 12px;
+  font-family: 'Inter', sans-serif;
+}
+
+.custom-marker {
+  background: none;
+  border: none;
+}
+
+.leaflet-popup-tip {
+  background: white;
+}

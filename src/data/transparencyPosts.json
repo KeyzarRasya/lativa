@@ -1,0 +1,380 @@
+[
+  {
+    "id": 1,
+    "category": "Kriminalitas",
+    "title": "Penanganan Cepat Tawuran",
+    "description": "Terjadi dugaan tawuran di Jl. Basuki Rahmat. Penanganan dilakukan Satpol PP dalam 3 menit.",
+    "timestamp": "2 jam yang lalu",
+    "confidence": 92,
+    "location": "Jl. Basuki Rahmat",
+    "tags": ["KeamananKota", "RespondCepat"],
+    "status": "Ditangani",
+    "fullArticle": {
+      "author": "Tim Monitoring LATIVA",
+      "date": "23 Oktober 2025, 14:30 WIB",
+      "image": "/sample/incident1.jpg",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Sistem AI LATIVA berhasil mendeteksi adanya aktivitas mencurigakan berupa kerumunan massa di Jl. Basuki Rahmat pada pukul 14:30 WIB. Algoritma pengenalan pola mendeteksi gerakan tidak normal dari 15-20 orang yang berkumpul dengan gestur agresif."
+        },
+        {
+          "type": "heading",
+          "text": "Kronologi Kejadian"
+        },
+        {
+          "type": "paragraph",
+          "text": "Deteksi awal dilakukan oleh CCTV nomor BR-03 yang terletak di persimpangan Jl. Basuki Rahmat dengan akurasi 92%. Sistem secara otomatis mengirimkan notifikasi darurat ke petugas Satpol PP terdekat melalui aplikasi mobile LATIVA."
+        },
+        {
+          "type": "paragraph",
+          "text": "Dalam waktu 3 menit, tim Satpol PP yang dipimpin oleh Bapak Joko Santoso tiba di lokasi dan berhasil membubarkan kerumunan sebelum terjadi bentrokan fisik. Tidak ada korban jiwa maupun luka-luka dalam insiden ini."
+        },
+        {
+          "type": "heading",
+          "text": "Tindak Lanjut"
+        },
+        {
+          "type": "paragraph",
+          "text": "Sebanyak 5 orang yang diduga sebagai provokator telah diamankan dan dibawa ke kantor Satpol PP untuk dimintai keterangan. Pihak kepolisian juga telah dilibatkan untuk proses investigasi lebih lanjut."
+        },
+        {
+          "type": "paragraph",
+          "text": "Walikota Purwakarta mengapresiasi kinerja sistem LATIVA yang mampu mencegah konflik horizontal di tengah masyarakat. Beliau menekankan pentingnya teknologi dalam menjaga keamanan dan ketertiban kota."
+        },
+        {
+          "type": "quote",
+          "text": "Sistem LATIVA telah membuktikan efektivitasnya dalam menjaga keamanan kota. Response time 3 menit adalah pencapaian luar biasa yang patut dibanggakan.",
+          "author": "Budi Santoso, Kepala Satpol PP Purwakarta"
+        }
+      ],
+      "statistics": [
+        { "label": "Waktu Deteksi", "value": "< 10 detik" },
+        { "label": "Response Time", "value": "3 menit" },
+        { "label": "Akurasi AI", "value": "92%" },
+        { "label": "Jumlah Tersangka", "value": "5 orang" }
+      ]
+    }
+  },
+  {
+    "id": 2,
+    "category": "Aktivitas Pejabat",
+    "title": "Kunjungan Kerja Camat",
+    "description": "Camat Jatiluhur melakukan kunjungan ke Desa Cikopo untuk monitoring program bantuan sosial.",
+    "timestamp": "4 jam yang lalu",
+    "confidence": 88,
+    "location": "Desa Cikopo, Jatiluhur",
+    "tags": ["TransparansiPejabat", "ProgramSosial"],
+    "status": "Terverifikasi",
+    "fullArticle": {
+      "author": "Redaksi Portal Transparansi",
+      "date": "23 Oktober 2025, 12:00 WIB",
+      "image": "/sample/official1.jpg",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Ibu Siti Nurhaliza, Camat Jatiluhur, melakukan kunjungan kerja ke Desa Cikopo dalam rangka monitoring dan evaluasi program bantuan sosial yang telah berjalan selama 3 bulan terakhir. Kunjungan ini merupakan bagian dari komitmen transparansi aktivitas pejabat yang tercatat dalam sistem LATIVA."
+        },
+        {
+          "type": "heading",
+          "text": "Agenda Kunjungan"
+        },
+        {
+          "type": "paragraph",
+          "text": "Kunjungan dimulai pukul 09.00 WIB dengan agenda pertemuan bersama Kepala Desa Cikopo dan tokoh masyarakat setempat. Dalam pertemuan tersebut, dibahas progress penyaluran bantuan sosial kepada 150 Keluarga Pra-Sejahtera di wilayah Desa Cikopo."
+        },
+        {
+          "type": "paragraph",
+          "text": "Camat Siti Nurhaliza juga melakukan kunjungan langsung ke rumah-rumah warga penerima bantuan untuk memastikan program berjalan sesuai sasaran. Beliau menekankan pentingnya akuntabilitas dan transparansi dalam setiap program pemerintah."
+        },
+        {
+          "type": "heading",
+          "text": "Hasil Monitoring"
+        },
+        {
+          "type": "paragraph",
+          "text": "Dari hasil monitoring, tercatat 98% penerima bantuan telah menerima haknya dengan tepat waktu dan tepat sasaran. Sisanya 2% masih dalam proses verifikasi data administrasi. Camat berkomitmen untuk menyelesaikan kendala administrasi tersebut dalam waktu maksimal 7 hari kerja."
+        },
+        {
+          "type": "quote",
+          "text": "Transparansi adalah kunci kepercayaan publik. Kami memastikan setiap rupiah bantuan sosial sampai ke tangan yang berhak.",
+          "author": "Siti Nurhaliza, Camat Jatiluhur"
+        },
+        {
+          "type": "paragraph",
+          "text": "Seluruh aktivitas kunjungan kerja ini terekam dalam sistem LATIVA dan dapat diakses oleh publik melalui Portal Transparansi Purwakarta. GPS tracking menunjukkan Camat berada di lokasi dari pukul 09.00 hingga 14.00 WIB."
+        }
+      ],
+      "statistics": [
+        { "label": "Keluarga Penerima", "value": "150 KK" },
+        { "label": "Tingkat Ketepatan", "value": "98%" },
+        { "label": "Durasi Kunjungan", "value": "5 jam" },
+        { "label": "Lokasi Dikunjungi", "value": "12 RT" }
+      ]
+    }
+  },
+  {
+    "id": 3,
+    "category": "Publikasi Kota",
+    "title": "Peningkatan Keamanan Pasar",
+    "description": "Instalasi 5 CCTV baru di area Pasar Baru untuk meningkatkan keamanan pedagang dan pembeli.",
+    "timestamp": "1 hari yang lalu",
+    "confidence": 100,
+    "location": "Pasar Baru, Purwakarta",
+    "tags": ["InfrastrukturKota", "SmartCity"],
+    "status": "Selesai",
+    "fullArticle": {
+      "author": "Dinas Komunikasi dan Informatika",
+      "date": "22 Oktober 2025, 10:00 WIB",
+      "image": "/sample/infrastructure1.jpg",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Pemerintah Kabupaten Purwakarta melalui Dinas Komunikasi dan Informatika berhasil menyelesaikan instalasi 5 unit CCTV berkualitas tinggi di kawasan Pasar Baru. Proyek senilai Rp 250 juta ini merupakan bagian dari program Smart City Purwakarta 2025."
+        },
+        {
+          "type": "heading",
+          "text": "Spesifikasi Teknis"
+        },
+        {
+          "type": "paragraph",
+          "text": "CCTV yang dipasang menggunakan teknologi terkini dengan resolusi 4K, night vision, dan dilengkapi dengan AI analytics untuk deteksi aktivitas mencurigakan. Semua kamera terhubung langsung ke Command Center LATIVA untuk monitoring real-time 24/7."
+        },
+        {
+          "type": "paragraph",
+          "text": "Kelima kamera ditempatkan strategis di pintu masuk utara, pintu masuk selatan, area parkir, zona kuliner, dan zona pedagang sayur. Dengan coverage area mencapai 95% dari total luas pasar yang mencapai 2.500 meter persegi."
+        },
+        {
+          "type": "heading",
+          "text": "Dampak Positif"
+        },
+        {
+          "type": "paragraph",
+          "text": "Sejak instalasi CCTV dimulai, tercatat penurunan kasus pencurian hingga 75% dibandingkan bulan sebelumnya. Para pedagang mengapresiasi langkah pemerintah dalam meningkatkan rasa aman bagi pedagang dan pembeli."
+        },
+        {
+          "type": "quote",
+          "text": "Kami merasa lebih aman sekarang. Barang dagangan tidak perlu dijaga ketat sepanjang waktu. Terima kasih Pemkab Purwakarta!",
+          "author": "Ibu Aminah, Pedagang Sayur Pasar Baru"
+        },
+        {
+          "type": "paragraph",
+          "text": "Kepala Dinas Komunikasi dan Informatika, Bapak Hendra Gunawan, menyatakan bahwa kedepannya akan ada penambahan 10 CCTV lagi di pasar-pasar tradisional lainnya di Purwakarta sebagai upaya mewujudkan Kota Cerdas yang aman dan nyaman."
+        },
+        {
+          "type": "heading",
+          "text": "Anggaran dan Transparansi"
+        },
+        {
+          "type": "paragraph",
+          "text": "Total anggaran proyek sebesar Rp 250.000.000 berasal dari APBD Kabupaten Purwakarta tahun 2025. Rincian penggunaan dana: Pengadaan CCTV (Rp 150 juta), Instalasi dan kabel (Rp 50 juta), Server dan storage (Rp 40 juta), dan Maintenance 1 tahun (Rp 10 juta)."
+        }
+      ],
+      "statistics": [
+        { "label": "Jumlah CCTV", "value": "5 unit" },
+        { "label": "Coverage Area", "value": "95%" },
+        { "label": "Penurunan Kriminalitas", "value": "75%" },
+        { "label": "Total Anggaran", "value": "Rp 250 juta" }
+      ]
+    }
+  },
+  {
+    "id": 4,
+    "category": "Kriminalitas",
+    "title": "Pencegahan Pencurian",
+    "description": "AI mendeteksi aktivitas mencurigakan di area parkir. Tim keamanan berhasil mencegah aksi pencurian.",
+    "timestamp": "1 hari yang lalu",
+    "confidence": 95,
+    "location": "Parkir Alun-alun",
+    "tags": ["PrevensiKriminal", "AIMonitoring"],
+    "status": "Ditangani",
+    "fullArticle": {
+      "author": "Tim Monitoring LATIVA",
+      "date": "22 Oktober 2025, 20:15 WIB",
+      "image": "/sample/security1.jpg",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Sistem kecerdasan buatan LATIVA berhasil mencegah aksi pencurian kendaraan bermotor di area parkir Alun-alun Purwakarta pada Selasa malam, 22 Oktober 2025 pukul 20.15 WIB. Algoritma deteksi perilaku mencurigakan menangkap pola gerakan abnormal dari seorang pria yang berkeliling area parkir."
+        },
+        {
+          "type": "heading",
+          "text": "Modus Operandi Pelaku"
+        },
+        {
+          "type": "paragraph",
+          "text": "Tersangka berinisial AS (27 tahun) tertangkap kamera CCTV sedang mencoba membuka paksa kunci stang sepeda motor Honda Beat warna merah yang terparkir di zona A parkir Alun-alun. AI LATIVA mendeteksi gerakan mencurigakan pelaku yang menggunakan alat sejenis kunci T untuk membongkar kunci stang."
+        },
+        {
+          "type": "paragraph",
+          "text": "Sistem secara otomatis memberikan alert level tinggi ke petugas keamanan dan memutar speaker peringatan otomatis di area parkir. Pelaku yang menyadari keberadaan sistem keamanan mencoba melarikan diri namun berhasil ditangkap petugas dalam radius 50 meter dari TKP."
+        },
+        {
+          "type": "heading",
+          "text": "Proses Penangkapan"
+        },
+        {
+          "type": "paragraph",
+          "text": "Petugas keamanan Alun-alun yang berjaga, Bapak Andi dan Bapak Rudi, langsung bergerak cepat setelah menerima notifikasi dari Command Center LATIVA. Dalam waktu kurang dari 2 menit, pelaku berhasil diamankan dan diserahkan ke Polsek Purwakarta untuk proses hukum lebih lanjut."
+        },
+        {
+          "type": "paragraph",
+          "text": "Dari penggeledahan, ditemukan barang bukti berupa kunci T, obeng minus ukuran besar, dan sarung tangan karet. Pelaku mengaku telah melakukan aksi serupa sebanyak 3 kali di lokasi berbeda dalam sebulan terakhir."
+        },
+        {
+          "type": "quote",
+          "text": "Ini adalah bukti nyata bagaimana teknologi AI dapat membantu kami dalam menjaga keamanan. Tanpa LATIVA, pencurian mungkin sudah terjadi.",
+          "author": "AKP Bambang Setiawan, Kapolsek Purwakarta"
+        },
+        {
+          "type": "heading",
+          "text": "Imbauan ke Masyarakat"
+        },
+        {
+          "type": "paragraph",
+          "text": "Pihak kepolisian mengimbau masyarakat untuk tetap waspada dan selalu mengunci kendaraan dengan baik. Meski sistem LATIVA sangat membantu, kewaspadaan pribadi tetap menjadi pertahanan utama terhadap tindak kriminal."
+        }
+      ],
+      "statistics": [
+        { "label": "Waktu Deteksi", "value": "8 detik" },
+        { "label": "Response Time", "value": "< 2 menit" },
+        { "label": "Akurasi AI", "value": "95%" },
+        { "label": "Barang Bukti", "value": "3 item" }
+      ]
+    }
+  },
+  {
+    "id": 5,
+    "category": "Aktivitas Pejabat",
+    "title": "Validasi LHKPN Bulanan",
+    "description": "48 pejabat telah menyelesaikan pelaporan LHKPN periode bulan ini dengan status terverifikasi.",
+    "timestamp": "2 hari yang lalu",
+    "confidence": 100,
+    "location": "Kantor Inspektorat",
+    "tags": ["TransparansiPejabat", "LHKPN"],
+    "status": "Terverifikasi",
+    "fullArticle": {
+      "author": "Inspektorat Kabupaten Purwakarta",
+      "date": "21 Oktober 2025, 16:00 WIB",
+      "image": "/sample/lhkpn1.jpg",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Inspektorat Kabupaten Purwakarta melaporkan bahwa 48 dari 50 pejabat struktural telah menyelesaikan kewajiban pelaporan Laporan Harta Kekayaan Penyelenggara Negara (LHKPN) untuk periode Oktober 2025. Tingkat kepatuhan mencapai 96%, meningkat 12% dari periode sebelumnya."
+        },
+        {
+          "type": "heading",
+          "text": "Mekanisme Pelaporan"
+        },
+        {
+          "type": "paragraph",
+          "text": "Pelaporan LHKPN dilakukan secara elektronik melalui sistem terintegrasi LATIVA yang terhubung langsung dengan database KPK. Setiap pejabat wajib melaporkan seluruh harta kekayaan, termasuk aset bergerak dan tidak bergerak, rekening bank, investasi, serta utang-piutang."
+        },
+        {
+          "type": "paragraph",
+          "text": "Sistem LATIVA dilengkapi dengan AI validator yang secara otomatis mendeteksi anomali atau ketidakwajaran dalam laporan. Jika ditemukan indikasi ketidaksesuaian antara harta dengan pendapatan, sistem akan menandai untuk investigasi lebih lanjut."
+        },
+        {
+          "type": "heading",
+          "text": "Hasil Verifikasi"
+        },
+        {
+          "type": "paragraph",
+          "text": "Dari 48 laporan yang masuk, seluruhnya telah melalui proses verifikasi dan dinyatakan valid. Tidak ditemukan indikasi gratifikasi atau peningkatan kekayaan yang tidak wajar. Dua pejabat yang belum melaporkan telah diberikan surat peringatan dan deadline tambahan 7 hari kerja."
+        },
+        {
+          "type": "quote",
+          "text": "Transparansi harta kekayaan adalah komitmen kami dalam membangun pemerintahan yang bersih. LATIVA memudahkan proses sekaligus meningkatkan akuntabilitas.",
+          "author": "Dr. Ahmad Dahlan, Inspektur Kabupaten Purwakarta"
+        },
+        {
+          "type": "heading",
+          "text": "Akses Publik"
+        },
+        {
+          "type": "paragraph",
+          "text": "Masyarakat dapat mengakses ringkasan LHKPN para pejabat melalui Portal Transparansi LATIVA. Informasi yang ditampilkan meliputi total aset, trend kenaikan/penurunan harta, dan status verifikasi. Hal ini sejalan dengan prinsip keterbukaan informasi publik."
+        },
+        {
+          "type": "paragraph",
+          "text": "Kedepannya, sistem LATIVA akan mengintegrasikan data LHKPN dengan deteksi lifestyle AI untuk memastikan gaya hidup pejabat sesuai dengan kemampuan ekonomi yang dilaporkan. Fitur ini direncanakan aktif mulai Januari 2026."
+        }
+      ],
+      "statistics": [
+        { "label": "Pejabat Lapor", "value": "48 dari 50" },
+        { "label": "Tingkat Kepatuhan", "value": "96%" },
+        { "label": "Status Verified", "value": "100%" },
+        { "label": "Anomali Terdeteksi", "value": "0 kasus" }
+      ]
+    }
+  },
+  {
+    "id": 6,
+    "category": "Publikasi Kota",
+    "title": "Pelatihan Sistem LATIVA",
+    "description": "Pelatihan penggunaan sistem LATIVA untuk 30 petugas lapangan dan operator monitoring.",
+    "timestamp": "3 hari yang lalu",
+    "confidence": 100,
+    "location": "Gedung Diklat Pemkab",
+    "tags": ["KapasitasSDM", "SmartGovernance"],
+    "status": "Selesai",
+    "fullArticle": {
+      "author": "Badan Kepegawaian Daerah",
+      "date": "20 Oktober 2025, 09:00 WIB",
+      "image": "/sample/training1.jpg",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Badan Kepegawaian Daerah (BKD) Kabupaten Purwakarta menyelenggarakan pelatihan intensif penggunaan sistem LATIVA untuk 30 petugas lapangan dan operator monitoring selama 3 hari, 20-22 Oktober 2025. Pelatihan ini bertujuan meningkatkan kapasitas SDM dalam mengoperasikan teknologi Smart Governance."
+        },
+        {
+          "type": "heading",
+          "text": "Materi Pelatihan"
+        },
+        {
+          "type": "paragraph",
+          "text": "Hari pertama fokus pada pengenalan sistem LATIVA, arsitektur teknologi, dan dashboard monitoring. Peserta belajar cara mengakses berbagai modul termasuk CCTV Monitoring, Incident Reporting, LHKPN Detection, dan Analytics Dashboard."
+        },
+        {
+          "type": "paragraph",
+          "text": "Hari kedua membahas operasional lapangan, mulai dari cara merespon alert dari sistem, prosedur koordinasi dengan instansi terkait, hingga dokumentasi kejadian. Peserta melakukan simulasi penanganan berbagai skenario seperti deteksi kriminalitas, monitoring aktivitas pejabat, dan verifikasi laporan masyarakat."
+        },
+        {
+          "type": "paragraph",
+          "text": "Hari ketiga adalah praktik langsung di Command Center LATIVA. Peserta bertugas sebagai operator monitoring secara bergiliran dan menangani insiden real-time. Evaluasi dilakukan melalui ujian praktik dan tertulis."
+        },
+        {
+          "type": "heading",
+          "text": "Narasumber dan Instruktur"
+        },
+        {
+          "type": "paragraph",
+          "text": "Pelatihan menghadirkan narasumber ahli dari berbagai bidang, termasuk: Dr. Bambang Wijaya (AI Specialist), Ir. Dewi Kartika (System Architecture), dan AKP Joko Santoso (Operational Response). Mereka berbagi pengalaman dan best practices dalam implementasi Smart City."
+        },
+        {
+          "type": "quote",
+          "text": "SDM yang kompeten adalah kunci sukses sistem LATIVA. Investasi pada pelatihan adalah investasi untuk masa depan kota yang lebih baik.",
+          "author": "Rina Wijaya, M.Si., Kepala BKD Purwakarta"
+        },
+        {
+          "type": "heading",
+          "text": "Hasil dan Sertifikasi"
+        },
+        {
+          "type": "paragraph",
+          "text": "Seluruh peserta dinyatakan lulus dengan nilai rata-rata 88 dari skala 100. Nilai tertinggi diraih oleh Saudara Andi Pratama dengan skor 96. Setiap peserta menerima sertifikat kompetensi operator LATIVA yang berlaku selama 2 tahun dan harus diperpanjang melalui refreshment training."
+        },
+        {
+          "type": "paragraph",
+          "text": "Kedepannya, BKD akan menyelenggarakan pelatihan serupa untuk gelombang kedua yang menargetkan 50 peserta dari tingkat kecamatan dan kelurahan. Target di akhir 2025 adalah memiliki 100 operator LATIVA tersertifikasi di seluruh Kabupaten Purwakarta."
+        }
+      ],
+      "statistics": [
+        { "label": "Jumlah Peserta", "value": "30 orang" },
+        { "label": "Durasi Pelatihan", "value": "3 hari" },
+        { "label": "Tingkat Kelulusan", "value": "100%" },
+        { "label": "Nilai Rata-rata", "value": "88/100" }
+      ]
+    }
+  }
+]
