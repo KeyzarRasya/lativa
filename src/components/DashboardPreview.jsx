@@ -3,6 +3,14 @@ import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import Swal from 'sweetalert2';
+import { 
+  getIncidents, 
+  subscribeToIncidents, 
+  createIncident,
+  formatIncidentForMap,
+  getIncidentStats 
+} from '../services/incidentService';
 
 // Fix Leaflet default marker icon issue
 delete L.Icon.Default.prototype._getIconUrl;
@@ -22,25 +30,78 @@ export default function DashboardPreview() {
     address: ''
   });
   const [isSelectingLocation, setIsSelectingLocation] = useState(false);
+  
+  // Firestore data states
+  const [incidents, setIncidents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterStatus, setFilterStatus] = useState('all'); // all, active, unverified, resolved
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveIncidents(prev => Math.max(8, Math.min(15, prev + (Math.random() > 0.5 ? 1 : -1))));
-      setIntegrityScore(prev => Math.max(82, Math.min(95, prev + (Math.random() > 0.5 ? 1 : -1))));
-    }, 3000);
+    // Fetch initial incidents data
+    const fetchIncidents = async () => {
+      try {
+        setLoading(true);
+        const data = await getIncidents({ limitCount: 20 });
+        const formatted = data.map(formatIncidentForMap);
+        setIncidents(formatted);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching incidents:', error);
+        setLoading(false);
+        // Fallback to sample data if Firebase fails
+        setIncidents(getSampleIncidents());
+      }
+    };
 
-    return () => clearInterval(interval);
+    fetchIncidents();
+
+    // Subscribe to real-time updates
+    const unsubscribe = subscribeToIncidents((data) => {
+      const formatted = data.map(formatIncidentForMap);
+      setIncidents(formatted);
+    }, { limitCount: 20 });
+
+    // Update stats periodically
+    const statsInterval = setInterval(async () => {
+      try {
+        const stats = await getIncidentStats();
+        setActiveIncidents(stats.active);
+        setIntegrityScore(Math.min(95, Math.max(82, Math.floor(stats.averageConfidence))));
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+      }
+    }, 5000);
+
+    return () => {
+      unsubscribe();
+      clearInterval(statsInterval);
+    };
   }, []);
 
   // Koordinat Purwakarta: -6.5569, 107.4433
   const purwakartaCenter = [-6.5569, 107.4433];
 
-  const incidents = [
+  // Filter incidents berdasarkan search query dan status
+  const filteredIncidents = incidents.filter(incident => {
+    const matchesSearch = searchQuery === '' || 
+      incident.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      incident.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      incident.type.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesStatus = filterStatus === 'all' || incident.status === filterStatus;
+    
+    return matchesSearch && matchesStatus;
+  });
+
+  // Sample data fallback jika Firebase error
+  const getSampleIncidents = () => [
     {
       type: 'Active',
       location: 'Jl. Veteran, Kec. Purwakarta',
       description: 'Terdeteksi aktivitas mencurigakan dengan potensi konflik antar kelompok',
-      coordinates: [-6.5550, 107.4410], // Dekat pusat kota
+      coordinates: [-6.5550, 107.4410],
       confidence: 92,
       status: 'active',
       time: '2 menit lalu'
@@ -49,7 +110,7 @@ export default function DashboardPreview() {
       type: 'Unverified',
       location: 'Kantor Kecamatan Jatiluhur',
       description: 'Laporan warga tentang aktivitas tidak biasa di area kantor kecamatan',
-      coordinates: [-6.5700, 107.4600], // Area Jatiluhur
+      coordinates: [-6.5700, 107.4600],
       confidence: 88,
       status: 'unverified',
       time: '15 menit lalu'
@@ -58,7 +119,7 @@ export default function DashboardPreview() {
       type: 'Resolved',
       location: 'Pasar Baru, Purwakarta',
       description: 'Kasus pencurian berhasil ditangani, pelaku diamankan petugas',
-      coordinates: [-6.5580, 107.4450], // Area pasar
+      coordinates: [-6.5580, 107.4450],
       confidence: 95,
       status: 'resolved',
       time: '1 jam lalu'
@@ -105,15 +166,89 @@ export default function DashboardPreview() {
     setIsSelectingLocation(false);
   };
 
-  const handleSubmitReport = () => {
-    console.log('Report submitted:', reportForm);
-    // Tambahkan logika submit di sini
-    setShowReportModal(false);
-    setReportForm({
-      coordinates: null,
-      description: '',
-      address: ''
-    });
+  const handleSubmitReport = async () => {
+    if (!reportForm.coordinates || !reportForm.address || reportForm.description.length < 20) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Data Tidak Lengkap',
+        text: 'Mohon lengkapi semua field yang diperlukan',
+        confirmButtonColor: '#0A4D8C',
+      });
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      
+      // Prepare incident data for Firestore sesuai struktur database
+      const incidentData = {
+        type: 'Unverified',
+        status: 'unverified',
+        location: reportForm.address,
+        description: reportForm.description,
+        coordinates: {
+          lat: reportForm.coordinates[0],
+          lng: reportForm.coordinates[1]
+        },
+        address: reportForm.address,
+        confidence: 75, // Default confidence untuk laporan warga
+        metadata: {
+          source: 'citizen_report',
+          priority: 'medium',
+          category: 'general',
+          reportedBy: 'anonymous', // Bisa diganti dengan user authentication
+          reportTime: new Date().toISOString()
+        }
+      };
+
+      // Submit to Firestore
+      const docId = await createIncident(incidentData);
+      console.log('Laporan berhasil dibuat dengan ID:', docId);
+
+      // Show success message with SweetAlert2
+      await Swal.fire({
+        icon: 'success',
+        title: 'Laporan Berhasil Dikirim!',
+        html: `
+          <p class="text-gray-600 mb-2">Laporan Anda telah berhasil dikirim.</p>
+          <p class="text-sm text-gray-500">ID Laporan: <strong>${docId}</strong></p>
+          <p class="text-sm text-gray-500 mt-2">Tim kami akan segera menindaklanjuti laporan Anda.</p>
+        `,
+        confirmButtonColor: '#0A4D8C',
+        confirmButtonText: 'OK',
+        timer: 5000,
+        timerProgressBar: true,
+      });
+
+      // Reset form dan tutup modal
+      setShowReportModal(false);
+      setReportForm({
+        coordinates: null,
+        description: '',
+        address: ''
+      });
+      setIsSelectingLocation(false);
+      setSubmitting(false);
+
+      // Data akan otomatis diperbarui karena subscribeToIncidents sudah running
+      // Tapi kita bisa refresh manual juga untuk memastikan
+      const stats = await getIncidentStats();
+      setActiveIncidents(stats.active);
+      
+    } catch (error) {
+      console.error('Error submitting report:', error);
+      
+      // Show error message with SweetAlert2
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal Mengirim Laporan',
+        text: error.message || 'Terjadi kesalahan saat mengirim laporan. Silakan coba lagi.',
+        confirmButtonColor: '#0A4D8C',
+        confirmButtonText: 'Coba Lagi'
+      });
+      
+      setSubmitting(false);
+    }
   };
 
   // Component untuk handle map click events
@@ -146,18 +281,26 @@ export default function DashboardPreview() {
                 </h3>
 
                 <div className="relative h-80 rounded-xl overflow-hidden shadow-inner">
-                  <MapContainer
-                    center={purwakartaCenter}
-                    zoom={13}
-                    style={{ height: '100%', width: '100%' }}
-                    scrollWheelZoom={false}
-                  >
+                  {loading ? (
+                    <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0A4D8C] mx-auto mb-3"></div>
+                        <p className="text-gray-600">Loading map data...</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <MapContainer
+                      center={purwakartaCenter}
+                      zoom={13}
+                      style={{ height: '100%', width: '100%' }}
+                      scrollWheelZoom={false}
+                    >
                     <TileLayer
                       attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
                     
-                    {incidents.map((incident, idx) => (
+                    {filteredIncidents.map((incident, idx) => (
                       <Marker 
                         key={idx} 
                         position={incident.coordinates}
@@ -196,7 +339,8 @@ export default function DashboardPreview() {
                         )}
                       </Marker>
                     ))}
-                  </MapContainer>
+                    </MapContainer>
+                  )}
 
                   {/* Legend */}
                   <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg z-[1000]">
@@ -220,7 +364,9 @@ export default function DashboardPreview() {
                   <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm rounded-lg px-4 py-2 shadow-lg z-[1000]">
                     <div className="flex items-center space-x-2">
                       <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                      <span className="text-sm font-semibold text-gray-700">{incidents.length} Incidents</span>
+                      <span className="text-sm font-semibold text-gray-700">
+                        {filteredIncidents.length} / {incidents.length} Incidents
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -232,18 +378,92 @@ export default function DashboardPreview() {
                   Realtime Incident Stream
                 </h3>
 
-                <div className="space-y-3">
-                  {incidents.map((incident, idx) => (
-                    <div
-                      key={idx}
-                      className={`p-4 rounded-xl border-2 transition-all hover:shadow-md ${
-                        incident.status === 'active'
-                          ? 'bg-red-50 border-red-200 glow-animation'
-                          : incident.status === 'unverified'
-                          ? 'bg-yellow-50 border-yellow-200'
-                          : 'bg-green-50 border-green-200'
+                {/* Search dan Filter */}
+                <div className="mb-4 space-y-3">
+                  {/* Search Bar */}
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Cari berdasarkan lokasi atau deskripsi..."
+                      className="w-full px-4 py-2 pl-10 border-2 border-gray-200 rounded-lg focus:border-[#0A4D8C] focus:outline-none transition-colors text-sm"
+                    />
+                    <MapPin className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                  </div>
+
+                  {/* Status Filter */}
+                  <div className="flex items-center space-x-2 overflow-x-auto pb-2">
+                    <button
+                      onClick={() => setFilterStatus('all')}
+                      className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap ${
+                        filterStatus === 'all'
+                          ? 'bg-[#0A4D8C] text-white'
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                       }`}
                     >
+                      Semua ({incidents.length})
+                    </button>
+                    <button
+                      onClick={() => setFilterStatus('active')}
+                      className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap ${
+                        filterStatus === 'active'
+                          ? 'bg-red-500 text-white'
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      }`}
+                    >
+                      Active ({incidents.filter(i => i.status === 'active').length})
+                    </button>
+                    <button
+                      onClick={() => setFilterStatus('unverified')}
+                      className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap ${
+                        filterStatus === 'unverified'
+                          ? 'bg-yellow-500 text-white'
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      }`}
+                    >
+                      Unverified ({incidents.filter(i => i.status === 'unverified').length})
+                    </button>
+                    <button
+                      onClick={() => setFilterStatus('resolved')}
+                      className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap ${
+                        filterStatus === 'resolved'
+                          ? 'bg-green-500 text-white'
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      }`}
+                    >
+                      Resolved ({incidents.filter(i => i.status === 'resolved').length})
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {loading ? (
+                    <div className="text-center py-8">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0A4D8C] mx-auto mb-2"></div>
+                      <p className="text-gray-500 text-sm">Loading incidents...</p>
+                    </div>
+                  ) : filteredIncidents.length === 0 ? (
+                    <div className="text-center py-8">
+                      <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                      <p className="text-gray-500">
+                        {searchQuery || filterStatus !== 'all' 
+                          ? 'Tidak ada incident yang cocok dengan pencarian'
+                          : 'Tidak ada incident saat ini'}
+                      </p>
+                    </div>
+                  ) : (
+                    filteredIncidents.map((incident, idx) => (
+                      <div
+                        key={incident.id || idx}
+                        className={`p-4 rounded-xl border-2 transition-all hover:shadow-md ${
+                          incident.status === 'active'
+                            ? 'bg-red-50 border-red-200 glow-animation'
+                            : incident.status === 'unverified'
+                            ? 'bg-yellow-50 border-yellow-200'
+                            : 'bg-green-50 border-green-200'
+                        }`}
+                      >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center space-x-2 mb-1">
@@ -270,7 +490,8 @@ export default function DashboardPreview() {
                         </div>
                       </div>
                     </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </div>
             </div>
@@ -490,10 +711,17 @@ export default function DashboardPreview() {
               </button>
               <button
                 onClick={handleSubmitReport}
-                disabled={!reportForm.coordinates || !reportForm.address || reportForm.description.length < 5}
-                className="px-6 py-2.5 bg-gradient-to-r from-[#0A4D8C] to-[#009688] text-white rounded-xl font-semibold hover:from-[#083a6b] hover:to-[#007d71] transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={!reportForm.coordinates || !reportForm.address || reportForm.description.length < 20 || submitting}
+                className="px-6 py-2.5 bg-gradient-to-r from-[#0A4D8C] to-[#009688] text-white rounded-xl font-semibold hover:from-[#083a6b] hover:to-[#007d71] transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
               >
-                Kirim Laporan
+                {submitting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    <span>Mengirim...</span>
+                  </>
+                ) : (
+                  <span>Kirim Laporan</span>
+                )}
               </button>
             </div>
           </div>
