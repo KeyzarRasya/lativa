@@ -24,14 +24,14 @@ export default function CCTVMonitoring() {
     'Terminal Purwakarta',
     'Stasiun Purwakarta',
     'Taman Sri Baduga',
-    'Jl. Ipik Gandamanah',
-    'Jl. KK Singawinata',
-    'Jl. Industri Raya',
-    'Jl. Raya Ciganea',
-    'Jl. Raya Sadang',
-    'Bundaran Kota',
-    'Jl. Ibrahim Singadilaga',
-    'Jl. Raya Cibatu'
+    // 'Jl. Ipik Gandamanah',
+    // 'Jl. KK Singawinata',
+    // 'Jl. Industri Raya',
+    // 'Jl. Raya Ciganea',
+    // 'Jl. Raya Sadang',
+    // 'Bundaran Kota',
+    // 'Jl. Ibrahim Singadilaga',
+    // 'Jl. Raya Cibatu'
   ];
 
   // Data CCTV dengan video sample
@@ -42,7 +42,7 @@ export default function CCTVMonitoring() {
       location: 'Pusat Kota',
       video: '/sample/cctv1.mp4',
       status: 'online',
-      kecamatan: 'Purwakarta'
+      kecamatan: 'Purwakarta',
     },
     {
       id: 2,
@@ -50,7 +50,7 @@ export default function CCTVMonitoring() {
       location: 'Dekat Kantor Bupati',
       video: '/sample/cctv2.mp4',
       status: 'online',
-      kecamatan: 'Purwakarta'
+      kecamatan: 'Purwakarta',
     },
     {
       id: 3,
@@ -58,7 +58,7 @@ export default function CCTVMonitoring() {
       location: 'Kawasan Perdagangan',
       video: '/sample/cctv1.mp4',
       status: 'online',
-      kecamatan: 'Purwakarta'
+      kecamatan: 'Purwakarta',
     },
     {
       id: 4,
@@ -71,10 +71,12 @@ export default function CCTVMonitoring() {
   ];
 
   // Filter CCTV berdasarkan search dan dropdown
-  const filteredCCTV = cctvData.filter(cctv => {
-    const matchSearch = cctv.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                       cctv.location.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchLocation = selectedLocation === '' || cctv.name === selectedLocation;
+  const filteredCCTV = cctvData.filter((cctv) => {
+    const matchSearch =
+      cctv.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      cctv.location.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchLocation =
+      selectedLocation === '' || cctv.name === selectedLocation;
     return matchSearch && matchLocation;
   });
 
@@ -177,7 +179,9 @@ export default function CCTVMonitoring() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center space-x-3 mb-4">
             <Video className="w-10 h-10" />
-            <h1 className="text-4xl md:text-5xl font-bold">Pengawasan CCTV Kota</h1>
+            <h1 className="text-4xl md:text-5xl font-bold">
+              Pengawasan CCTV Kota
+            </h1>
           </div>
           <p className="text-xl text-white/90">
             Monitoring real-time keamanan dan aktivitas kota Purwakarta
@@ -223,7 +227,9 @@ export default function CCTVMonitoring() {
           <div className="mt-6 flex items-center flex-wrap gap-4">
             <div className="flex items-center space-x-2 bg-green-50 text-green-700 px-4 py-2 rounded-lg">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="font-medium">{filteredCCTV.length} CCTV Online</span>
+              <span className="font-medium">
+                {filteredCCTV.length} CCTV Online
+              </span>
             </div>
             <div className="flex items-center space-x-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-lg">
               <MapPin className="w-4 h-4" />
@@ -248,7 +254,10 @@ export default function CCTVMonitoring() {
               className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 group"
             >
               {/* Video Container */}
-              <div className="relative aspect-video bg-black cursor-pointer" onClick={() => openModal(cctv)}>
+              <div
+                className="relative aspect-video bg-black cursor-pointer"
+                onClick={() => openModal(cctv)}
+              >
                 <video
                   src={cctv.video}
                   autoPlay
@@ -256,12 +265,14 @@ export default function CCTVMonitoring() {
                   muted
                   className="w-full h-full object-cover"
                 />
-                
+
                 {/* Overlay on Hover */}
                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                   <div className="text-center">
                     <Maximize2 className="w-12 h-12 text-white mx-auto mb-2" />
-                    <p className="text-white font-semibold">Klik untuk memperbesar</p>
+                    <p className="text-white font-semibold">
+                      Klik untuk memperbesar
+                    </p>
                   </div>
                 </div>
 
@@ -287,7 +298,9 @@ export default function CCTVMonitoring() {
                   <Video className="w-6 h-6 text-[#009688]" />
                 </div>
                 <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
-                  <span className="text-sm text-gray-500">Kec. {cctv.kecamatan}</span>
+                  <span className="text-sm text-gray-500">
+                    Kec. {cctv.kecamatan}
+                  </span>
                   <button
                     onClick={() => openModal(cctv)}
                     className="text-[#0A4D8C] hover:text-[#009688] font-medium text-sm flex items-center space-x-1 transition-colors"
@@ -436,10 +449,14 @@ export default function CCTVMonitoring() {
             {/* Modal Header */}
             <div className="bg-gradient-to-r from-[#0A4D8C] to-[#009688] text-white p-6 flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold mb-1">{selectedVideo.name}</h2>
+                <h2 className="text-2xl font-bold mb-1">
+                  {selectedVideo.name}
+                </h2>
                 <div className="flex items-center text-white/90">
                   <MapPin className="w-4 h-4 mr-1" />
-                  <span>{selectedVideo.location} - Kec. {selectedVideo.kecamatan}</span>
+                  <span>
+                    {selectedVideo.location} - Kec. {selectedVideo.kecamatan}
+                  </span>
                 </div>
               </div>
               <button
@@ -460,7 +477,7 @@ export default function CCTVMonitoring() {
                 controls
                 className="w-full h-full"
               />
-              
+
               {/* Live Badge */}
               <div className="absolute top-4 right-4 flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded-full font-medium shadow-lg">
                 <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
