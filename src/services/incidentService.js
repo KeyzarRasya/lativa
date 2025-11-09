@@ -20,8 +20,9 @@ const INCIDENTS_COLLECTION = 'incidents';
 /**
  * Incident Model Structure in Firestore:
  * {
- *   type: string ('Active' | 'Unverified' | 'Resolved'),
- *   status: string ('active' | 'unverified' | 'resolved'),
+ *   type: string ('Unverified' | 'Verified' | 'Handled' | 'Resolved'),
+ *   status: string ('unverified' | 'verified' | 'handled' | 'resolved'),
+ *   zone: string ('green' | 'yellow' | 'red'),
  *   location: string,
  *   description: string,
  *   coordinates: {
@@ -255,17 +256,19 @@ export const updateIncident = async (incidentId, updates) => {
 /**
  * Update incident status
  * @param {string} incidentId - Document ID
- * @param {string} newStatus - New status ('active', 'unverified', 'resolved')
+ * @param {string} newStatus - New status ('unverified', 'verified', 'handled', 'resolved')
  * @returns {Promise<void>}
  */
 export const updateIncidentStatus = async (incidentId, newStatus) => {
   try {
     const statusTypeMap = {
-      active: 'Active',
       unverified: 'Unverified',
+      verified: 'Verified',
+      handled: 'Handled',
       resolved: 'Resolved'
     };
 
+    // Zone tidak lagi terikat dengan status - zone adalah independent field
     await updateIncident(incidentId, {
       status: newStatus,
       type: statusTypeMap[newStatus] || 'Unverified'
@@ -350,6 +353,7 @@ export const formatIncidentForMap = (incident) => {
     id: incident.id,
     type: incident.type,
     status: incident.status,
+    zone: incident.zone || 'yellow', // default to yellow if no zone specified
     location: incident.location,
     description: incident.description,
     coordinates: [incident.coordinates.lat, incident.coordinates.lng],

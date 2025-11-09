@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, User, LogIn } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isAuthenticated, user } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -50,7 +52,7 @@ export default function Navbar() {
               Portal Transparansi
             </Link>
             <Link to="/dashboard" className="bg-gradient-to-r from-[#0A4D8C] to-[#009688] text-white px-6 py-2.5 rounded-xl hover:from-[#083a6b] hover:to-[#007d71] transition-all duration-300 shadow-lg hover:shadow-xl font-medium">
-              Dashboard Kota
+              Laporan Kota
             </Link>
           </div>
 
@@ -82,7 +84,7 @@ export default function Navbar() {
               Portal Transparansi
             </Link>
             <Link to="/dashboard" className="block w-full bg-gradient-to-r from-[#0A4D8C] to-[#009688] text-white px-6 py-2.5 rounded-xl hover:from-[#083a6b] hover:to-[#007d71] transition-all text-center font-medium shadow-md" onClick={() => setIsMobileMenuOpen(false)}>
-              Dashboard
+              Laporan Kota
             </Link>
           </div>
         </div>
