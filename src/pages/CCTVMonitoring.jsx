@@ -66,8 +66,8 @@ export default function CCTVMonitoring() {
       location: 'Area Pasar',
       video: '/sample/cctv2.mp4',
       status: 'online',
-      kecamatan: 'Purwakarta'
-    }
+      kecamatan: 'Purwakarta',
+    },
   ];
 
   // Filter CCTV berdasarkan search dan dropdown
@@ -117,7 +117,9 @@ export default function CCTVMonitoring() {
         return;
       }
       if (f.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-        setDetectionText(`Ukuran file terlalu besar. Maksimum ${MAX_FILE_SIZE_MB} MB.`);
+        setDetectionText(
+          `Ukuran file terlalu besar. Maksimum ${MAX_FILE_SIZE_MB} MB.`
+        );
         return;
       }
       setUploadedFile(f);
@@ -136,7 +138,9 @@ export default function CCTVMonitoring() {
       return;
     }
     if (f.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-      setDetectionText(`Ukuran file terlalu besar. Maksimum ${MAX_FILE_SIZE_MB} MB.`);
+      setDetectionText(
+        `Ukuran file terlalu besar. Maksimum ${MAX_FILE_SIZE_MB} MB.`
+      );
       return;
     }
     setUploadedFile(f);
@@ -156,20 +160,49 @@ export default function CCTVMonitoring() {
     setDragActive(false);
   };
 
-  const handleDetect = () => {
+  // const handleDetect = () => {
+  //   if (!uploadedFile) {
+  //     setDetectionText('Silakan unggah video terlebih dahulu.');
+  //     return;
+  //   }
+  //   setIsDetecting(true);
+  //   setDetectionText('Menjalankan deteksi...');
+  //   // Mock processing delay — replace with real detection call
+  //   setTimeout(() => {
+  //     const resultUrl = previewUrl || URL.createObjectURL(uploadedFile);
+  //     setResultVideoSrc(resultUrl);
+  //     setDetectionText('Hasil Deteksi: Tidak ada aktivitas mencurigakan terdeteksi.');
+  //     setIsDetecting(false);
+  //   }, 1400);
+  // };
+
+  const handleDetect = async () => {
     if (!uploadedFile) {
       setDetectionText('Silakan unggah video terlebih dahulu.');
       return;
     }
+
     setIsDetecting(true);
     setDetectionText('Menjalankan deteksi...');
-    // Mock processing delay — replace with real detection call
-    setTimeout(() => {
-      const resultUrl = previewUrl || URL.createObjectURL(uploadedFile);
-      setResultVideoSrc(resultUrl);
-      setDetectionText('Hasil Deteksi: Tidak ada aktivitas mencurigakan terdeteksi.');
+
+    const formData = new FormData();
+    formData.append('file', uploadedFile);
+
+    try {
+      // api endpoint model
+      const res = await fetch('http://192.168.18.71:8000/predict_video', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      setDetectionText(data.detection_text);
+      setResultVideoSrc(data.video_result_url);
+    } catch (error) {
+      console.error(error);
+      setDetectionText('Terjadi kesalahan saat melakukan deteksi.');
+    } finally {
       setIsDetecting(false);
-    }, 1400);
+    }
   };
 
   return (
@@ -341,22 +374,33 @@ export default function CCTVMonitoring() {
           >
             <div className="bg-gradient-to-r from-[#0A4D8C] to-[#009688] text-white p-5 flex items-center justify-between">
               <h3 className="text-xl font-bold">Check Video</h3>
-              <button onClick={closeCheckModal} className="p-2 hover:bg-white/20 rounded-lg transition-colors">
+              <button
+                onClick={closeCheckModal}
+                className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+              >
                 <X className="w-6 h-6" />
               </button>
             </div>
 
             <div className="p-6 space-y-6">
               <div
-                className={`border-2 border-dashed rounded-xl p-6 text-center transition-colors ${dragActive ? 'border-blue-300 bg-blue-50' : 'border-gray-200 bg-white'}`}
+                className={`border-2 border-dashed rounded-xl p-6 text-center transition-colors ${
+                  dragActive
+                    ? 'border-blue-300 bg-blue-50'
+                    : 'border-gray-200 bg-white'
+                }`}
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
                 onDragEnter={handleDragEnter}
                 onDragLeave={handleDragLeave}
               >
-                <p className="text-gray-600 mb-3">Seret dan lepas video di sini, atau pilih dari perangkat / kamera</p>
+                <p className="text-gray-600 mb-3">
+                  Seret dan lepas video di sini, atau pilih dari perangkat /
+                  kamera
+                </p>
                 <div className="flex items-center justify-center space-x-3">
-                  <label className="cursor-pointer inline-flex items-center px-4 py-2 bg-[#0A4D8C] text-white rounded-lg hover:bg-[#083a6b] disabled:opacity-60"
+                  <label
+                    className="cursor-pointer inline-flex items-center px-4 py-2 bg-[#0A4D8C] text-white rounded-lg hover:bg-[#083a6b] disabled:opacity-60"
                     aria-disabled={isDetecting}
                   >
                     Pilih Video
@@ -371,29 +415,54 @@ export default function CCTVMonitoring() {
                   </label>
                   <button
                     type="button"
-                    onClick={() => fileInputRef.current && fileInputRef.current.click()}
-                    className={`inline-flex items-center px-4 py-2 border rounded-lg ${isDetecting ? 'opacity-60 cursor-not-allowed' : ''}`}
+                    onClick={() =>
+                      fileInputRef.current && fileInputRef.current.click()
+                    }
+                    className={`inline-flex items-center px-4 py-2 border rounded-lg ${
+                      isDetecting ? 'opacity-60 cursor-not-allowed' : ''
+                    }`}
                     disabled={isDetecting}
                   >
                     Gunakan Kamera
                   </button>
                 </div>
                 {uploadedFile && (
-                  <p className="mt-3 text-sm text-gray-500">File: {uploadedFile.name} • {(uploadedFile.size/1024/1024).toFixed(2)} MB</p>
+                  <p className="mt-3 text-sm text-gray-500">
+                    File: {uploadedFile.name} •{' '}
+                    {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB
+                  </p>
                 )}
               </div>
 
               <div className="flex items-center justify-between">
                 <button
                   onClick={handleDetect}
-                  className={`inline-flex items-center space-x-2 bg-[#009688] text-white px-5 py-2 rounded-lg hover:bg-[#007a66] transition-colors ${isDetecting ? 'opacity-70 cursor-not-allowed' : ''}`}
+                  className={`inline-flex items-center space-x-2 bg-[#009688] text-white px-5 py-2 rounded-lg hover:bg-[#007a66] transition-colors ${
+                    isDetecting ? 'opacity-70 cursor-not-allowed' : ''
+                  }`}
                   disabled={isDetecting}
                 >
                   {isDetecting ? (
                     <>
-                      <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                      <svg
+                        className="w-4 h-4 animate-spin"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                        ></path>
                       </svg>
                       <span>Memproses...</span>
                     </>
@@ -401,21 +470,31 @@ export default function CCTVMonitoring() {
                     <span>Detection</span>
                   )}
                 </button>
-                <div className="text-sm text-gray-500">Hasil deteksi akan muncul di bawah setelah proses selesai</div>
+                <div className="text-sm text-gray-500">
+                  Hasil deteksi akan muncul di bawah setelah proses selesai
+                </div>
               </div>
 
               {/* Result Video & Detection Text */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-black rounded-lg overflow-hidden aspect-video">
                   {previewUrl ? (
-                    <video src={previewUrl} controls className="w-full h-full object-cover" />
+                    <video
+                      src={previewUrl}
+                      controls
+                      className="w-full h-full object-cover"
+                    />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400">Preview video akan tampil di sini</div>
+                    <div className="w-full h-full flex items-center justify-center text-gray-400">
+                      Preview video akan tampil di sini
+                    </div>
                   )}
                 </div>
 
                 <div className="bg-white border rounded-lg p-4">
-                  <h4 className="font-medium text-gray-800 mb-2">Keterangan Hasil Deteksi</h4>
+                  <h4 className="font-medium text-gray-800 mb-2">
+                    Keterangan Hasil Deteksi
+                  </h4>
                   <div className="min-h-[120px] text-sm text-gray-700">
                     {detectionText ? (
                       <p>{detectionText}</p>
@@ -427,7 +506,11 @@ export default function CCTVMonitoring() {
                     <div className="mt-4">
                       <h5 className="text-sm font-medium mb-2">Video Hasil</h5>
                       <div className="bg-black rounded overflow-hidden">
-                        <video src={resultVideoSrc} controls className="w-full h-48 object-cover" />
+                        <video
+                          src={resultVideoSrc}
+                          controls
+                          className="w-full h-48 object-cover"
+                        />
                       </div>
                     </div>
                   )}
