@@ -1,10 +1,19 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Search, MapPin, Video, X, Maximize2 } from 'lucide-react';
 
 export default function CCTVMonitoring() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('');
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const [showCheckModal, setShowCheckModal] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [resultVideoSrc, setResultVideoSrc] = useState(null);
+  const [detectionText, setDetectionText] = useState('');
+  const fileInputRef = useRef(null);
+  const [isDetecting, setIsDetecting] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
+  const MAX_FILE_SIZE_MB = 50; // max allowed upload size
 
   // Data lokasi CCTV di Purwakarta (dummy data)
   const locations = [
@@ -57,40 +66,8 @@ export default function CCTVMonitoring() {
       location: 'Area Pasar',
       video: '/sample/cctv2.mp4',
       status: 'online',
-      kecamatan: 'Purwakarta',
-    },
-    // {
-    //   id: 5,
-    //   name: 'Terminal Purwakarta',
-    //   location: 'Terminal Bus',
-    //   video: '/sample/cctv1.mp4',
-    //   status: 'online',
-    //   kecamatan: 'Maniis',
-    // },
-    // {
-    //   id: 6,
-    //   name: 'Stasiun Purwakarta',
-    //   location: 'Stasiun Kereta',
-    //   video: '/sample/cctv1.mp4',
-    //   status: 'online',
-    //   kecamatan: 'Maniis',
-    // },
-    // {
-    //   id: 7,
-    //   name: 'Taman Sri Baduga',
-    //   location: 'Taman Kota',
-    //   video: '/sample/cctv1.mp4',
-    //   status: 'online',
-    //   kecamatan: 'Purwakarta',
-    // },
-    // {
-    //   id: 8,
-    //   name: 'Jl. Ipik Gandamanah',
-    //   location: 'Jalan Utama',
-    //   video: '/sample/cctv1.mp4',
-    //   status: 'online',
-    //   kecamatan: 'Purwakarta',
-    // },
+      kecamatan: 'Purwakarta'
+    }
   ];
 
   // Filter CCTV berdasarkan search dan dropdown
@@ -109,6 +86,90 @@ export default function CCTVMonitoring() {
 
   const closeModal = () => {
     setSelectedVideo(null);
+  };
+
+  // Check Video modal handlers
+  const openCheckModal = () => setShowCheckModal(true);
+  const closeCheckModal = () => {
+    setShowCheckModal(false);
+    setUploadedFile(null);
+    setPreviewUrl(null);
+    setResultVideoSrc(null);
+    setDetectionText('');
+    if (fileInputRef.current) fileInputRef.current.value = null;
+  };
+
+  useEffect(() => {
+    // create preview url when uploadedFile changes
+    if (uploadedFile) {
+      const url = URL.createObjectURL(uploadedFile);
+      setPreviewUrl(url);
+      return () => URL.revokeObjectURL(url);
+    }
+    setPreviewUrl(null);
+  }, [uploadedFile]);
+
+  const handleFileSelect = (e) => {
+    const f = e.target.files && e.target.files[0];
+    if (f) {
+      if (!f.type.startsWith('video')) {
+        setDetectionText('Tipe file tidak didukung. Harap unggah file video.');
+        return;
+      }
+      if (f.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+        setDetectionText(`Ukuran file terlalu besar. Maksimum ${MAX_FILE_SIZE_MB} MB.`);
+        return;
+      }
+      setUploadedFile(f);
+      setResultVideoSrc(null);
+      setDetectionText('');
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragActive(false);
+    const f = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (!f) return;
+    if (!f.type.startsWith('video')) {
+      setDetectionText('Tipe file tidak didukung. Harap unggah file video.');
+      return;
+    }
+    if (f.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+      setDetectionText(`Ukuran file terlalu besar. Maksimum ${MAX_FILE_SIZE_MB} MB.`);
+      return;
+    }
+    setUploadedFile(f);
+    setResultVideoSrc(null);
+    setDetectionText('');
+  };
+
+  const handleDragOver = (e) => e.preventDefault();
+
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    setDragActive(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setDragActive(false);
+  };
+
+  const handleDetect = () => {
+    if (!uploadedFile) {
+      setDetectionText('Silakan unggah video terlebih dahulu.');
+      return;
+    }
+    setIsDetecting(true);
+    setDetectionText('Menjalankan deteksi...');
+    // Mock processing delay — replace with real detection call
+    setTimeout(() => {
+      const resultUrl = previewUrl || URL.createObjectURL(uploadedFile);
+      setResultVideoSrc(resultUrl);
+      setDetectionText('Hasil Deteksi: Tidak ada aktivitas mencurigakan terdeteksi.');
+      setIsDetecting(false);
+    }, 1400);
   };
 
   return (
@@ -163,7 +224,7 @@ export default function CCTVMonitoring() {
           </div>
 
           {/* Stats */}
-          <div className="mt-6 flex flex-wrap gap-4">
+          <div className="mt-6 flex items-center flex-wrap gap-4">
             <div className="flex items-center space-x-2 bg-green-50 text-green-700 px-4 py-2 rounded-lg">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               <span className="font-medium">
@@ -174,6 +235,14 @@ export default function CCTVMonitoring() {
               <MapPin className="w-4 h-4" />
               <span className="font-medium">Kabupaten Purwakarta</span>
             </div>
+            <button
+              type="button"
+              onClick={openCheckModal}
+              className="ml-auto flex items-center space-x-2 bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition-colors"
+            >
+              <MapPin className="w-4 h-4" />
+              <span className="font-medium">Check Video</span>
+            </button>
           </div>
         </div>
 
@@ -260,6 +329,114 @@ export default function CCTVMonitoring() {
       </div>
 
       {/* Modal */}
+      {/* Check Video Modal */}
+      {showCheckModal && (
+        <div
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={closeCheckModal}
+        >
+          <div
+            className="relative bg-white rounded-2xl max-w-3xl w-full overflow-hidden shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="bg-gradient-to-r from-[#0A4D8C] to-[#009688] text-white p-5 flex items-center justify-between">
+              <h3 className="text-xl font-bold">Check Video</h3>
+              <button onClick={closeCheckModal} className="p-2 hover:bg-white/20 rounded-lg transition-colors">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-6">
+              <div
+                className={`border-2 border-dashed rounded-xl p-6 text-center transition-colors ${dragActive ? 'border-blue-300 bg-blue-50' : 'border-gray-200 bg-white'}`}
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                onDragEnter={handleDragEnter}
+                onDragLeave={handleDragLeave}
+              >
+                <p className="text-gray-600 mb-3">Seret dan lepas video di sini, atau pilih dari perangkat / kamera</p>
+                <div className="flex items-center justify-center space-x-3">
+                  <label className="cursor-pointer inline-flex items-center px-4 py-2 bg-[#0A4D8C] text-white rounded-lg hover:bg-[#083a6b] disabled:opacity-60"
+                    aria-disabled={isDetecting}
+                  >
+                    Pilih Video
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="video/*"
+                      capture="camera"
+                      onChange={handleFileSelect}
+                      className="hidden"
+                    />
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current && fileInputRef.current.click()}
+                    className={`inline-flex items-center px-4 py-2 border rounded-lg ${isDetecting ? 'opacity-60 cursor-not-allowed' : ''}`}
+                    disabled={isDetecting}
+                  >
+                    Gunakan Kamera
+                  </button>
+                </div>
+                {uploadedFile && (
+                  <p className="mt-3 text-sm text-gray-500">File: {uploadedFile.name} • {(uploadedFile.size/1024/1024).toFixed(2)} MB</p>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between">
+                <button
+                  onClick={handleDetect}
+                  className={`inline-flex items-center space-x-2 bg-[#009688] text-white px-5 py-2 rounded-lg hover:bg-[#007a66] transition-colors ${isDetecting ? 'opacity-70 cursor-not-allowed' : ''}`}
+                  disabled={isDetecting}
+                >
+                  {isDetecting ? (
+                    <>
+                      <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                      </svg>
+                      <span>Memproses...</span>
+                    </>
+                  ) : (
+                    <span>Detection</span>
+                  )}
+                </button>
+                <div className="text-sm text-gray-500">Hasil deteksi akan muncul di bawah setelah proses selesai</div>
+              </div>
+
+              {/* Result Video & Detection Text */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-black rounded-lg overflow-hidden aspect-video">
+                  {previewUrl ? (
+                    <video src={previewUrl} controls className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-gray-400">Preview video akan tampil di sini</div>
+                  )}
+                </div>
+
+                <div className="bg-white border rounded-lg p-4">
+                  <h4 className="font-medium text-gray-800 mb-2">Keterangan Hasil Deteksi</h4>
+                  <div className="min-h-[120px] text-sm text-gray-700">
+                    {detectionText ? (
+                      <p>{detectionText}</p>
+                    ) : (
+                      <p className="text-gray-400">Belum ada hasil deteksi.</p>
+                    )}
+                  </div>
+                  {resultVideoSrc && (
+                    <div className="mt-4">
+                      <h5 className="text-sm font-medium mb-2">Video Hasil</h5>
+                      <div className="bg-black rounded overflow-hidden">
+                        <video src={resultVideoSrc} controls className="w-full h-48 object-cover" />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {selectedVideo && (
         <div
           className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
