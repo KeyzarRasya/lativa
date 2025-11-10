@@ -54,7 +54,7 @@ export default function LHKPNDetection() {
       const formData = new FormData();
       formData.append('image', selectedImage);
 
-      const response = await fetch('YOUR_API_ENDPOINT_HERE', {
+      const response = await fetch('https://lativa.shareproject.my.id/api/predict', {
         method: 'POST',
         body: formData,
       });
