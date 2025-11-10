@@ -190,7 +190,7 @@ export default function CCTVMonitoring() {
 
     try {
       // api endpoint model
-      const res = await fetch('http://192.168.18.71:8000/predict_video', {
+      const res = await fetch('https://yolo.shareproject.my.id/predict_video', {
         method: 'POST',
         body: formData,
       });
